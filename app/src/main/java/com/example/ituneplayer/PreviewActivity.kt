@@ -6,19 +6,25 @@ import android.os.PersistableBundle
 import android.util.Log
 import android.view.KeyEvent
 import android.widget.MediaController.MediaPlayerControl
+import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ObservableField
 import androidx.lifecycle.DefaultLifecycleObserver
 import androidx.lifecycle.LifecycleOwner
 import com.example.ituneplayer.databinding.ActivityPreviewBinding
+import com.google.android.youtube.player.YouTubeBaseActivity
+import com.google.android.youtube.player.YouTubeInitializationResult
+import com.google.android.youtube.player.YouTubePlayer
 import java.util.Objects
 import android.media.MediaPlayer as AndroidMediaPlayer
 
-class PreviewActivity : AppCompatActivity(), android.widget.MediaController.MediaPlayerControl {
+class PreviewActivity : YouTubeBaseActivity(), android.widget.MediaController.MediaPlayerControl {
+
+    private val YOUTUBE_API_KEY = "AIzaSyBYrFGbsrdBrh3vbTYZa_12zq9VNpqYCjs"
 
     private val title = ObservableField<String>()
-    private var cover = ObservableField<Bitmap>()
+    private val description = ObservableField<String>()
     private var url: String? = null
 
     private var isPlaying = false
@@ -94,7 +100,7 @@ class PreviewActivity : AppCompatActivity(), android.widget.MediaController.Medi
     }
 
     init{
-        lifecycle.addObserver(lifecycleObserver)
+//        lifecycle.addObserver(lifecycleObserver)
     }
 
 
@@ -115,17 +121,37 @@ class PreviewActivity : AppCompatActivity(), android.widget.MediaController.Medi
         binding = DataBindingUtil.setContentView(this, R.layout.activity_preview)
 
         title.set(intent.getStringExtra("title"))
-        cover.set(intent.getParcelableExtra("cover"))
+        description.set(intent.getStringExtra("description"))
         url = intent.getStringExtra("url")
-
+        val urlParser = url?.takeLast(11)
         binding.title = title
-        binding.cover = cover
-
+        binding.description = description
         if (savedInstanceState != null) {
             isPlaying = savedInstanceState.getBoolean("isPlaying")
             position = savedInstanceState.getInt("currentPosition")
 
         }
+        val playerView = binding.playerView
+
+        playerView.initialize(YOUTUBE_API_KEY, object: YouTubePlayer.OnInitializedListener{
+            override fun onInitializationSuccess(
+                p0: YouTubePlayer.Provider?,
+                p1: YouTubePlayer?,
+                p2: Boolean
+            ) {
+
+                p1?.loadVideo("$urlParser")
+                p1?.play()
+            }
+
+            override fun onInitializationFailure(
+                p0: YouTubePlayer.Provider?,
+                p1: YouTubeInitializationResult?
+            ) {
+                Toast.makeText(applicationContext, "Youtube init failed", Toast.LENGTH_LONG).show()
+            }
+
+        })
     }
 
 

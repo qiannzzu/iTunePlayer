@@ -16,6 +16,7 @@ class iTuneXMLParser(val listener: ParseListener) {
     private val parser = factory.newPullParser()
     private val data = mutableListOf<SongData>()
     private var songTitle = ""
+    private var songDescription = ""
     private var text = ""
     private var imageFound = false
     private var songCover: Bitmap? = null
@@ -48,10 +49,12 @@ class iTuneXMLParser(val listener: ParseListener) {
                                 XmlPullParser.TEXT -> text = parser.text
                                 XmlPullParser.END_TAG -> if(tagName.equals("title",ignoreCase = true)){
                                     songTitle = text
+                                }else if (tagName.equals("media:description",ignoreCase = true)){
+                                    songDescription = text
+                                    Log.i("songDescription", songDescription)
                                 }
                                 else if(tagName.equals("media:thumbnail", ignoreCase = true) && imageFound) {
                                     val url = parser.getAttributeValue(null, "url")
-                                    Log.i("URL", url)
                                     val inputStream = URL(url).openStream()
                                     songCover = BitmapFactory.decodeStream(inputStream)
                                     imageFound = false
@@ -61,7 +64,7 @@ class iTuneXMLParser(val listener: ParseListener) {
                             tagName = parser.name
                         }
 
-                        data.add(SongData(songTitle,songCover, songUrl))
+                        data.add(SongData(songTitle,songCover, songUrl,songDescription))
                         Log.i("title",songTitle)
                         Log.i("preview", songUrl)
                     }

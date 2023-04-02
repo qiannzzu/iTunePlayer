@@ -57,12 +57,13 @@ class MainActivity : AppCompatActivity(), iTuneRecyclerViewAdapter.RecyclerViewC
     }
 
     override fun onItemClick(view: View, position: Int) {
-        Toast.makeText(this, adapter.songs[position].title, Toast.LENGTH_LONG).show()
+//        Toast.makeText(this, adapter.songs[position].title, Toast.LENGTH_LONG).show()
         val intent = Intent(this, PreviewActivity::class.java)
         val song = adapter.songs[position]
         intent.putExtra("title", song.title)
 //        intent.putExtra("cover", song.cover)
         intent.putExtra("url", song.url)
+        intent.putExtra("description",song.description)
         startActivity(intent)
     }
 }

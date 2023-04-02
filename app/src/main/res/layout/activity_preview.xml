@@ -8,7 +8,9 @@
         <variable
             name="title"
             type="androidx.databinding.ObservableField&lt;String&gt;" />
-
+        <variable
+            name="description"
+            type="androidx.databinding.ObservableField&lt;String&gt;" />
         <variable
             name="cover"
             type="androidx.databinding.ObservableField&lt;android.graphics.Bitmap&gt;" />
@@ -37,13 +39,11 @@
                 android:gravity="center"
                 android:orientation="vertical">
 
-                <ImageView
-                    android:id="@+id/imageView"
+
+                <com.google.android.youtube.player.YouTubePlayerView
+                    android:id="@+id/playerView"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:imageBitmap="@{cover}"
-                    android:minWidth="150dp"
-                    android:minHeight="150dp" />
+                    android:layout_height="wrap_content"/>
 
                 <TextView
                     android:id="@+id/textView"
@@ -51,6 +51,14 @@
                     android:layout_height="wrap_content"
                     android:text="@{title}"
                     android:textSize="24dp" />
+
+                <TextView
+                    android:id="@+id/textViewDescn"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@{description}"
+                    android:textSize="16dp" />
+
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>

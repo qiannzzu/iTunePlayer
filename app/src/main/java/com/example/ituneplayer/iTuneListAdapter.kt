@@ -35,6 +35,7 @@ class iTuneListAdapter(val context: Context): BaseAdapter() {
         val textView = itemView.findViewById<TextView>(R.id.txtView)
         textView.text = songs[p0].title
 
+
         return  itemView
     }
 }
